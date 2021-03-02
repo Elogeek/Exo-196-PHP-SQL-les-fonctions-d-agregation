@@ -24,7 +24,60 @@
      */
 
     // TODO Votre code ici, commencez par require un des objet de connexion que nous avons fait ensemble.
+    $server = 'localhost';
+    $user = 'root';
+    $password ='dev';
+    $db = 'db_cours';
 
+    try {
+        $connect= new PDO("mysql:host=$server;dbname=$db;charset=utf8", $user, $password);
+        $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $connect->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_ASSOC);
+
+
+        /*1*/
+        $stmt = $connect->prepare("SELECT MIN(age) FROM user");
+        $result = $stmt->execute();
+
+        /*2*/
+        $stmt = $connect->prepare("SELECT MAX(age) FROM user");
+        $result = $stmt->execute();
+
+        /*3*/
+        $stmt = $connect->prepare("SELECT count(*) as user FROM user");
+        if($stmt) {
+            $calcul = $stmt->fetch();
+            echo "Il y a " . $calcul;
+        }
+        $result = $stmt->execute();
+
+        /*4*/
+        $stmt = $connect->prepare("SELECT count(*) as numero From user AND numero='5' ");
+        if($stmt) {
+            $tadaam = $stmt->fetch();
+            echo "il y a " . $tadaam . "utilisateurs";
+        }
+        $result = $stmt->execute();
+
+        /*5*/
+        $stmt = $connect->prepare("SELECT AVG(age) as moyenne_age FROM user");
+        if($stmt) {
+            $answer = $stmt->fetch();
+            echo "La moyenne d'ages des users est de -> " . $answer;
+        }
+        $result = $stmt->execute();
+
+        /*6*/
+        $stmt = $connect->prepare("SELECT SUM(numero) as somme_numero FROM user");
+        if($stmt) {
+            $go = $stmt->fetch();
+            echo "la somme des numéros de maison des utilisateurs est de -> " . $go;
+        }
+        $result = $stmt->execute();
+    }
+    catch(PDOException $exception) {
+        echo $exception->getMessage();
+    }
 
     ?>
 </body>
